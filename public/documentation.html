@@ -11,6 +11,83 @@
 <body>
     <h1>MyFlix Application</h1>
     <p>The web application will provide users with access to information about different movies, directors, and genres. Users will be able to sign up update their personal information, and create a list of their favorite movies.</p>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope = "col">Business Logic</th>
+                <th scope = "col">URL</th>
+                <th scope = "col">HTTP Method</th>
+                <th scope = "col">Request Body Data</th>
+                <th scope = "col">Return Body Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Movies List</td>
+                <td>/movies</td>
+                <td>GET</td>
+                <td>none</td>
+                <td>JSON object (data all movies)</td>
+            </tr>
+            <tr>
+                <td>Get data (1 movie)</td>
+                <td>/movies/[title]</td>
+                <td>GET</td>
+                <td>none</td>
+                <td>JSON object (data single movie [ID])</td>
+            </tr>
+            <tr>
+                <td>Get data (1 genre)</td>
+                <td>/movies/genres/[Name]</td>
+                <td>GET</td>
+                <td>none</td>
+                <td>Text description of genre [ID]</td>
+            </tr>
+            <tr>
+                <td>Get data 1 director</td>
+                <td>/movies/directors/[Name]</td>
+                <td>GET</td>
+                <td>none</td>
+                <td>JSON object (data 1 director [ID])</td>
+            </tr>
+            <tr>
+                <td>Add user</td>
+                <td>/users</td>
+                <td>POST</td>
+                <td>JSON object (user info)</td>
+                <td>JSON object(user info) + success message</td>
+            </tr>
+            <tr>
+                <td>Update User</td>
+                <td>/users/[Username]</td>
+                <td>PUT</td>
+                <td>none</td>
+                <td>Text message: successfully updated</td>
+            </tr>
+            <tr>
+                <td>Add movie to favorites</td>
+                <td>/users/[Username]/favorites/MovieID</td>
+                <td>PUT</td>
+                <td>none</td>
+                <td>Text message: List successfully updated</td>
+            </tr>
+            <tr>
+                <td>Remove movie from favorites</td>
+                <td>/users/[Username]/favorites/MovieID</td>
+                <td>DELETE</td>
+                <td>none</td>
+                <td>Text message: Movie successfully removed</td>
+            </tr>
+            <tr>
+                <td>De-register User</td>
+                <td>/users/[Username]</td>
+                <td>DELETE</td>
+                <td>none</td>
+                <td>Text message: User data successfully removed</td>
+            </tr>
+        </tbody>
+    </table>
     
 </body>
 </html>
