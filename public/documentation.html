@@ -20,6 +20,7 @@
                 <th scope = "col">HTTP Method</th>
                 <th scope = "col">Request Body Data</th>
                 <th scope = "col">Return Body Data</th>
+                <th scope = "col">Return Body Data Example</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,32 @@
                 <td>GET</td>
                 <td>none</td>
                 <td>JSON object (data all movies)</td>
+                <td> "{
+                "Genre": {
+                "Name": "Fantasy",
+                "Description": "Fantasy film is a genre that incorporates imaginative and fantastic themes. These themes usually involve
+                magic, supernatural events, or fantasy worlds. Although it is its own distinct genre, these films can overlap into the
+                horror and science fiction genres."
+                },
+                "Director": {
+                "Name": "David Yates",
+                "Bio": "David Yates was born on October 8, 1963 in St. Helens, Merseyside, England. He is a director and producer, known
+                for Harry Potter and the Deathly Hallows: Part 2 (2011), Harry Potter and the Order of the Phoenix (2007) and The Legend
+                of Tarzan (2016).",
+                "Birth": "1963"
+                },
+                "Actors": [],
+                "_id": "6088803722b316e9415da8bc",
+                "Title": "Fantastic Beasts and Where to Find Them",
+                "Description": "The adventures of writer Newt Scamader in New York's secret community of witches and wizards seventy
+                years before Harry Potter reads his book in school.",
+                "ImagePath": "fantasticbeasts.png",
+                "Featured": true,
+                "Stars": [
+                "IDeddieredmayne",
+                "IDkatherinewaterson"
+                ]
+                },"</td>
             </tr>
             <tr>
                 <td>Get data (1 movie)</td>
@@ -36,13 +63,44 @@
                 <td>GET</td>
                 <td>none</td>
                 <td>JSON object (data single movie [ID])</td>
+                <td>"{
+                "Genre": {
+                "Name": "Science Fiction",
+                "Description": "Science Fiction movies take viewers into a world of amazing and futuristic technology, where space
+                travelers roam innumerable universes, aliens live amonst us, and almost anything is possible."
+                },
+                "Director": {
+                "Name": "Lana Wachowski",
+                "Bio": "Lana Wachowski and her sister Lilly, also known as the Wachowskis, are the duo behind such ground-breaking
+                movies as The Matric (1999) and Cloud Atlas (2012).",
+                "Birth": "1965"
+                },
+                "Actors": [],
+                "_id": "608896e722b316e9415da8c3",
+                "Title": "The Matrix",
+                "Description": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the
+                shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligene.",
+                "ImagePath": "thematrix.png",
+                "Featured": true,
+                "Stars": [
+                "IDjhenwick",
+                "IDkeanureeves"
+                ]
+                }"</td>
             </tr>
             <tr>
                 <td>Get data (1 genre)</td>
                 <td>/movies/genres/[Name]</td>
                 <td>GET</td>
                 <td>none</td>
-                <td>Text description of genre [ID]</td>
+                <td>JSON object: description of genre [ID]</td>
+                <td>"{
+                "Genre": {
+                "Name": "Adventure",
+                "Description": "The adventure genre is based on story-telling. Often combined with at least one other genre, such as
+                action or science fiction, adventure films weave richly detailed settings together with a plot based on a journey or
+                quest."
+                },"</td>
             </tr>
             <tr>
                 <td>Get data 1 director</td>
@@ -50,34 +108,86 @@
                 <td>GET</td>
                 <td>none</td>
                 <td>JSON object (data 1 director [ID])</td>
+                <td>""Director": {
+                "Name": "Peter Jackson",
+                "Bio": "Peter Jackson, born October 31, 1961, in North Island, New Zealand, is perhaps best known for his film
+                adaptation of JRR Tolkein's The Lord of the Rings and The Hobbit. For The Lord of the Rings, Jackson took the
+                unprecedented step of shooting all 3 installements of the fantasy saga simultaneously, over a 15-month period.",
+                "Birth": "1961"
+                },"</td>
             </tr>
             <tr>
                 <td>Add user</td>
                 <td>/users</td>
                 <td>POST</td>
-                <td>JSON object (user info)</td>
+                <td>JSON object (user info): {
+                "Username": "tamatea",
+                "Password": "user1234",
+                "Email": "tam1234@gmail.com",
+                "Birthday": "1991-05-28"
+                }</td>
                 <td>JSON object(user info) + success message</td>
+                <td> "{
+                "Username": "tamatea",
+                "Password": "user1234",
+                "Email": "tam1234@gmail.com",
+                "Birthday": "1991-05-28"
+                }"</td>
             </tr>
             <tr>
                 <td>Update User</td>
                 <td>/users/[Username]</td>
                 <td>PUT</td>
-                <td>none</td>
-                <td>Text message: successfully updated</td>
+                <td>JSON object (user info): {
+                "Username" : "tamatea",
+                "Password" : "tammovies",
+                "Email" : "tam1234@gmail.com",
+                "Birthday": "1991-05-28"
+                }</td>
+                <td>JSON object: successfully updated</td>
+                <td>"{
+                "FavoriteMovies": [],
+                "_id": "608eced4a6a83b2efcc73133",
+                "Username": "tamatea",
+                "Password": "tammovies",
+                "Email": "tam1234@gmail.com",
+                "Birthday": "1991-05-28T00:00:00.000Z",
+                "__v": 0
+                }"</td>
             </tr>
             <tr>
                 <td>Add movie to favorites</td>
                 <td>/users/[Username]/favorites/MovieID</td>
-                <td>PUT</td>
+                <td>POST</td>
                 <td>none</td>
-                <td>Text message: List successfully updated</td>
+                <td>JSON object: Updated Favorites List</td>
+                <td>"{
+                "FavoriteMovies": [
+                "6088803722b316e9415da8bc"
+                ],
+                "_id": "608eced4a6a83b2efcc73133",
+                "Username": "tamatea",
+                "Password": "tammovies",
+                "Email": "tam1234@gmail.com",
+                "Birthday": "1991-05-28T00:00:00.000Z",
+                "__v": 0
+                }"</td>
             </tr>
             <tr>
                 <td>Remove movie from favorites</td>
                 <td>/users/[Username]/favorites/MovieID</td>
                 <td>DELETE</td>
                 <td>none</td>
-                <td>Text message: Movie successfully removed</td>
+                <td>JSON object: Movie successfully removed</td>
+                <td>"{
+                "FavoriteMovies": [],
+                "_id": "608eced4a6a83b2efcc73133",
+                "Username": "tamatea",
+                "Password": "tammovies",
+                "Email": "tam1234@gmail.com",
+                "Birthday": "1991-05-28T00:00:00.000Z",
+                "__v": 0
+                }"</td>
             </tr>
             <tr>
                 <td>De-register User</td>
@@ -85,6 +195,7 @@
                 <td>DELETE</td>
                 <td>none</td>
                 <td>Text message: User data successfully removed</td>
+                <td>"tamatea was deleted."</td>
             </tr>
         </tbody>
     </table>
