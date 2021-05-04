@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Models = require('./models.js');
+const Models = require('./models.js'); //requrie local models.js file
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -7,6 +7,7 @@ const Users = Models.User;
 
 mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
+//require modules***
 const express = require('express');
 const morgan = require('morgan');
 const uuid = require('uuid');
@@ -14,10 +15,16 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
+let auth = require('./auth')(app);  // require local auth.js file
+
+//require passport module
+const passport = require('passport');
+require('./passport'); // require local passport.js file
+
 app.use(morgan('common'));
 
 //GET list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
     Movies.find()
         .then((movies) =>{
             res.status(201).json(movies);
@@ -29,7 +36,7 @@ app.get('/movies', (req, res) => {
 });
 
 //GET data 1 movie
-app.get('/movies/:Title', (req, res) =>{
+app.get('/movies/:Title', passport.authenticate('jwt', {session: false}), (req, res) =>{
     Movies.findOne({Title: req.params.Title})
     .then((movie) =>{
         res.json(movie);
@@ -41,10 +48,10 @@ app.get('/movies/:Title', (req, res) =>{
 });
 
 //get data 1 genre
-app.get('/movies/genres/:Genre', (req,res) =>{
+app.get('/movies/genres/:Genre', passport.authenticate('jwt', {session: false}), (req,res) =>{
     Movies.findOne({'Genre.Name': req.params.Genre})
-    .then((genre) =>{
-        res.json(genre);
+    .then((movie) =>{
+        res.json(movie.Genre);
     })
     .catch((err) =>{
         console.error(err);
@@ -53,10 +60,10 @@ app.get('/movies/genres/:Genre', (req,res) =>{
 });
 
 //get data 1 director
-app.get('/movies/directors/:Name', (req, res) =>{
+app.get('/movies/directors/:Name', passport.authenticate('jwt', {session: false}), (req, res) =>{
     Movies.findOne({'Director.Name': req.params.Name})
-    .then((director) =>{
-        res.json(director);
+    .then((movie) =>{
+        res.json(movie.Genre);
     })
     .catch((err) =>{
         console.error(err);
@@ -65,7 +72,7 @@ app.get('/movies/directors/:Name', (req, res) =>{
 });
 
 //add user
-app.post('/users', (req, res) =>{
+app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) =>{
     Users.findOne({Username: req.body.Username})
     .then((user) =>{
         if(user){
@@ -91,7 +98,7 @@ app.post('/users', (req, res) =>{
 });
 
 //update user
-app.put('/users/:Username', (req, res) =>{
+app.put('/users/:Username', passport.authenticate('jwt', {session: false}),(req, res) =>{
     Users.findOneAndUpdate({Username: req.params.Username}, {$set: {
         Username: req.body.Username,
         Password: req.body.Password,
@@ -110,7 +117,7 @@ app.put('/users/:Username', (req, res) =>{
 });
 
 //add movie to favorites
-app.post('/users/:Username/favorites/:MovieID', (req, res) =>{
+app.post('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) =>{
     Users.findOneAndUpdate({Username: req.params.Username}, {$addToSet: {FavoriteMovies: req.params.MovieID}
     },
     {new: true},
@@ -125,7 +132,7 @@ app.post('/users/:Username/favorites/:MovieID', (req, res) =>{
 });
 
 //remove movie from favorites
-app.delete('/users/:Username/favorites/:MovieID', (req, res) =>{
+app.delete('/users/:Username/favorites/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) =>{
     Users.findOneAndUpdate({Username: req.params.Username}, {$pull: {FavoriteMovies: req.params.MovieID }
     },
     { new: true },
@@ -140,7 +147,7 @@ app.delete('/users/:Username/favorites/:MovieID', (req, res) =>{
 });
 
 //deregister user
-app.delete('/users/:Username', (req, res) =>{
+app.delete('/users/:Username', passport.authenticate('jwt', {session: false}),(req, res) =>{
     Users.findOneAndRemove({Username: req.params.Username})
     .then((user)=>{
         if(!user){
