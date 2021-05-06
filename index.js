@@ -9,11 +9,14 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true, u
 
 //require modules***
 const express = require('express');
+const cors = require('cors'); //CORS data secrutiy
+const {check, validationResults} = require('express-validator');
 const morgan = require('morgan');
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
 
 const app = express();
+app.use(cors()); //CORS data default all origins
 app.use(bodyParser.json());
 let auth = require('./auth')(app);  // require local auth.js file
 
@@ -72,15 +75,29 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', {session: false}
 });
 
 //add user
-app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) =>{
-    Users.findOne({Username: req.body.Username})
+app.post('/users', 
+[//validation logic
+    check('Username', 'Username is required').isLength({min:5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email not vaid').isEmail()
+
+], (req, res) =>{
+    //check the validation object for errors
+    let errors = validationResults(req);
+    if(!error.isEmpty()){
+        return require.status(422).json({errors: errors.array()});
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({Username: req.body.Username}) //search to see if user exists
     .then((user) =>{
         if(user){
             return res.status(400).send(req.body.Username + 'already exists.');
         }else{
             Users.create({
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
             })
@@ -98,10 +115,22 @@ app.post('/users', passport.authenticate('jwt', {session: false}), (req, res) =>
 });
 
 //update user
-app.put('/users/:Username', passport.authenticate('jwt', {session: false}),(req, res) =>{
+app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
+[//validation logic
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email not vaid').isEmail()
+], (req, res) =>{
+    //check the validation object for errors
+    let errors = validationResults(req);
+    if (!error.isEmpty()) {
+        return require.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate({Username: req.params.Username}, {$set: {
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
         }
@@ -173,8 +202,10 @@ app.use((err, req, res, next) =>{
     res.status(500).send('Something broke!');
 });
 
-app.listen(8080, () =>{
-    console.log('This app is listening at port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () =>{
+    console.log('Listening on Port ' + port);
+    }
 });
 
 
