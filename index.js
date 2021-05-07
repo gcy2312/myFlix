@@ -5,14 +5,14 @@ const Movies = Models.Movie;
 const Users = Models.User;
 // const Actors = Models.Actor;
 
-// mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true, useUnifiedTopology: true});    //local DB
+mongoose.connect('mongodb://localhost:27017/myFlixDB', {useNewUrlParser: true, useUnifiedTopology: true});    //local DB
 
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });  //connection URI
+// mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });  //connection URI
 
 //require modules***
 const express = require('express');
 const cors = require('cors'); //CORS data secrutiy
-const {check, validationResults} = require('express-validator');
+const {check, validationResult} = require('express-validator');
 const morgan = require('morgan');
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
@@ -86,9 +86,9 @@ app.post('/users',
 
 ], (req, res) =>{
     //check the validation object for errors
-    let errors = validationResults(req);
-    if(!error.isEmpty()){
-        return require.status(422).json({errors: errors.array()});
+    let errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors: errors.array()});
     }
 
     let hashedPassword = Users.hashPassword(req.body.Password);
@@ -125,9 +125,9 @@ app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
     check('Email', 'Email not vaid').isEmail()
 ], (req, res) =>{
     //check the validation object for errors
-    let errors = validationResults(req);
-    if (!error.isEmpty()) {
-        return require.status(422).json({ errors: errors.array() });
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
     }
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate({Username: req.params.Username}, {$set: {
