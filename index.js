@@ -28,7 +28,7 @@ generateAuth(app);  // require local auth.js file
 const passport = require('passport'); //require local passport(login)
 
 //GET list of all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .then((movies) => {
             res.json(movies);
