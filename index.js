@@ -115,7 +115,17 @@ app.post('/users',
                 res.status(500).send('Error: ' + err);
             })
     });
-
+//get user info
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+            res.json(user);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send('Error: ' + err);
+        })
+});
 //update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     [//validation logic
