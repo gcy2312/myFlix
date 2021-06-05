@@ -117,7 +117,10 @@ app.post('/users',
     });
 //get user info
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ Username: req.body.Username })
+    Users.findOne({
+        Username: req.body.Username,
+        FavoriteMovies: req.body.FavoriteMovies
+    })
         .then((user) => {
             res.json(user);
         })
