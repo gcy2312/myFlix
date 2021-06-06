@@ -115,19 +115,16 @@ app.post('/users',
                 res.status(500).send('Error: ' + err);
             })
     });
-//get user info
-app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({
-        Username: req.body.Username,
-        FavoriteMovies: req.body.FavoriteMovies
-    })
-        .then((user) => {
+// Get a user by username
+app.get("/users/:username", (req, res) => {
+    Users.findOne({ Username: req.params.username })
+        .then(user => {
             res.json(user);
         })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send('Error: ' + err);
-        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send("Error: " + err);
+        });
 });
 //update user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
