@@ -13,11 +13,15 @@ let movieSchema = mongoose.Schema({
         Bio: String
     },
     Actors: [String],
-    // Actors: [{type: mongoose.Schema.Types._id, ref: 'Actor'}],
     ImagePath: String,
     PosterPath: String,
     Featured: Boolean
 });
+
+/**
+ * function to hash user password so that only excrypted passwords are stored in database
+ * @param {string} password
+ */
 
 let userSchema = mongoose.Schema({
     Username: { type: String, required: true },
@@ -31,14 +35,18 @@ let userSchema = mongoose.Schema({
 userSchema.statics.hashPassword = (password) => {
     return bcrypt.hashSync(password, 10);
 };
+
+/**
+ * function to compare password that user enters with encrypted password stored in database
+ * @param {string} password
+ */
+
 userSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.Password);
 };
 
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
-// let Actor = mongoose.model('Actor', actorSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
-// module.exports.Actor = Actor;
